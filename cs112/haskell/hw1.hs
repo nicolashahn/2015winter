@@ -1,5 +1,6 @@
 -- hw1.hs
 -- Nicolas Hahn
+import Data.Char
 
 
 citeAuthor :: String -> String -> String
@@ -68,8 +69,16 @@ references t = length (filter (checkIfRef) (words t))
 
 
 --sample arguments for citeText
-let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
-let moby = ("Herman Melville", "Moby Dick", 1851)
+--let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
+--let moby = ("Herman Melville", "Moby Dick", 1851)
 -- "The Great Gatsby (F. Scott Fitzgerald, 1925) and Moby Dick (Herman Melville, 1851) both feature.."
 
+
+--helper for citeText
+--converts 2nd char to int in "[n]"
+getRefN :: String -> Int
+getRefN s = digitToInt (s !! 1)
+
+--replace "[n]" with "Title (Auth, Year)" in a string
+--where n is the index in the list of tuples
 citeText :: [(String, String, Int)] -> String -> String
