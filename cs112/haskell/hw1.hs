@@ -58,4 +58,18 @@ txt = "[1] and [2] both feature characters who will do whatever it takes to " ++
       "get to their goal, and in the end the thing they want the most ends " ++
       "up destroying them.  In case of [2] this is a whale..."
 
+--helper for references to check if a string is the right format
+--side note: (words t) breaks string t into list of strings
+checkIfRef :: String -> Bool
+checkIfRef x = ((head x) == '[' ) && ((last x) == ']')
+
 references :: String -> Int
+references t = length (filter (checkIfRef) (words t))
+
+
+--sample arguments for citeText
+let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
+let moby = ("Herman Melville", "Moby Dick", 1851)
+-- "The Great Gatsby (F. Scott Fitzgerald, 1925) and Moby Dick (Herman Melville, 1851) both feature.."
+
+citeText :: [(String, String, Int)] -> String -> String
