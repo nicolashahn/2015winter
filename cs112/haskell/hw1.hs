@@ -60,7 +60,6 @@ txt = "[1] and [2] both feature characters who will do whatever it takes to " ++
       "up destroying them.  In case of [2] this is a whale..."
 
 --helper for references to check if a string is the right format
---side note: (words t) breaks string t into list of strings
 checkIfRef :: String -> Bool
 checkIfRef x = ((head x) == '[' ) && ((last x) == ']')
 
@@ -80,11 +79,21 @@ getRefN :: String -> Int
 getRefN s = digitToInt (s !! 1)
 
 --helper for citeText to convert the [n] strings to citations
-replaceRef :: (String, String, Int) -> String -> String
-replaceRef c s = citeBook c
+--given both list of citations and list of refs
+--gets the int of the ref, picks that element from citebook, recursively puts it on the list
+replaceRef :: [(String, String, Int)] -> [String] -> [String]
+replaceRef c s:slist = (citeBook c !! getRefN s) : replaceRef c slist
 
---replace "[n]" with "Title (Auth, Year)" in a string
+--replace "[n]" with "Title (Auth, Year)" in a block of text
 --where n is the index in the list of tuples
 citeText :: [(String, String, Int)] -> String -> String
 citeText [] s = s --don't change anything if no citations given
-citeText c s = getRefN (filter checkIfRef (words s))
+citeText c s = map replaceRef c (filter checkIfRef (words s))
+
+
+-- new plan of attack: 
+	-- get list of all words
+	-- filter [n]
+	-- map replaceRef to all [n]
+		-- convert list of refs to ints, then 
+	-- unwords
