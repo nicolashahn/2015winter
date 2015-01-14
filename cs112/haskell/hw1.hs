@@ -75,10 +75,16 @@ references t = length (filter (checkIfRef) (words t))
 
 
 --helper for citeText
---converts 2nd char to int in "[n]"
+--converts 2nd char to int in "[n]" and returns it
 getRefN :: String -> Int
 getRefN s = digitToInt (s !! 1)
+
+--helper for citeText to convert the [n] strings to citations
+replaceRef :: (String, String, Int) -> String -> String
+replaceRef c s = citeBook c
 
 --replace "[n]" with "Title (Auth, Year)" in a string
 --where n is the index in the list of tuples
 citeText :: [(String, String, Int)] -> String -> String
+citeText [] s = s --don't change anything if no citations given
+citeText c s = getRefN (filter checkIfRef (words s))
