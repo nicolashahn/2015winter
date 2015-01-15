@@ -61,39 +61,36 @@ txt = "[1] and [2] both feature characters who will do whatever it takes to " ++
 
 --helper for references to check if a string is the right format
 checkIfRef :: String -> Bool
-checkIfRef x = ((head x) == '[' ) && ((last x) == ']')
+checkIfRef x = ((head x) == '[' ) && ((last x) == ']') && (elem (digitToInt (x !! 1)) [1..9])
 
 references :: String -> Int
 references t = length (filter (checkIfRef) (words t))
 
 
---sample arguments for citeText
---let gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
---let moby = ("Herman Melville", "Moby Dick", 1851)
--- "The Great Gatsby (F. Scott Fitzgerald, 1925) and Moby Dick (Herman Melville, 1851) both feature.."
-
-
 --helper for citeText
 --converts 2nd char to int in "[n]" and returns it
 getRefN :: String -> Int
-getRefN s = digitToInt (s !! 1)
+getRefN s = (digitToInt (s !! 1)) - 1
 
 --helper for citeText to convert the [n] strings to citations
---given both list of citations and list of refs
---gets the int of the ref, picks that element from citebook, recursively puts it on the list
+	--given both list of citations and list of words
+	--checks if word is a ref
+	--gets the int of the ref, picks that element from citebook, recursively puts it on the list
+	--if not a ref, put it back on the list and replaceRef the rest of the list
 replaceRef :: [(String, String, Int)] -> [String] -> [String]
-replaceRef c s:slist = (citeBook c !! getRefN s) : replaceRef c slist
+replaceRef c [] = []
+replaceRef c (s:slist) = if checkIfRef s then ((citeBook (c !! getRefN s)) : (replaceRef c slist)) else s: (replaceRef c slist)
 
 --replace "[n]" with "Title (Auth, Year)" in a block of text
 --where n is the index in the list of tuples
 citeText :: [(String, String, Int)] -> String -> String
 citeText [] s = s --don't change anything if no citations given
-citeText c s = map replaceRef c (filter checkIfRef (words s))
+citeText c s = unwords (replaceRef c (words s))
 
+--sample citations
+gatsby :: (String, String, Int)
+gatsby = ("F. Scott Fitzgerald", "The Great Gatsby", 1925)
+moby :: (String, String, Int)
+moby = ("Herman Melville", "Moby Dick", 1851)
 
--- new plan of attack: 
-	-- get list of all words
-	-- filter [n]
-	-- map replaceRef to all [n]
-		-- convert list of refs to ints, then 
-	-- unwords
+-- awww yissss
