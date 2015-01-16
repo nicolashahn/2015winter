@@ -83,52 +83,121 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    # let's start over
 
+    stack = []          # holds coordinates we need to finish
+    stack.append(problem.getStartState())
+    visited = []        # holds coordinates of everywhere we've been
+    # visited.append(problem.getStartState())
+    path = []           # holds directions to get to coordinates (1 less than stack)
+    # path.append("null")
+
+    while stack:
+        tile = stack.pop()
+        if path:
+            dir = path.pop()
+        else:
+            dir = "null"
+
+        visited.append(tile)
+
+        validSuccessors = []
+
+        for x in problem.getSuccessors(tile):
+            if x[0] not in visited:
+                validSuccessors.append(x)
+
+        #put current tile back on if we have successors
+        if validSuccessors:
+            stack.append(tile)
+            if dir is not "null":
+                path.append(dir)
+
+        for x in validSuccessors:
+            if problem.isGoalState(x[0]):
+                stack.append(x[0])
+                print visited
+                print stack
+                print path.append(x[1])
+                return path
+            else:
+                if x[0] not in visited:
+                    stack.append(x[0])
+                    path.append(x[1])
+
+
+
+
+
+
+
+
+
+        # if tile not in visited:
+        #     visited.append(tile)
+        #     stack.extend([s[0] for s in problem.getSuccessors(tile)])
+        #     path.extend([s[1] for s in problem.getSuccessors(tile)])
+        #     #print stack
+        #     #print path
+        #
+        # if problem.isGoalState(tile):
+        #     path.append(curdir)
+        #     stack.append(tile)
+        #     #print stack
+        #     #print path
+        #     return path
+
+
+
+    '''
     #add coordinates of start state to list of visited states
-    #and stack for checking successors
+    #and coords for checking successors - ones we still have to check
+    #path (directions) to keep track of list of actions
     visited = []
-    stack = []
+    coords = []
     path = []
 
-    #[0] gives the coordinates, [1] is the direction, [2] is _____
+    #[0] gives the coordinates, [1] is the direction, [2] is cost of action
     #self python note: append is pushing, top of list at back
-    visited.append(problem.getStartState()[0])
-    stack.append(problem.getStartState()[0])
-    path.append(problem.getStartState()[0])
+    startCoords = problem.getStartState()
+    visited.append(startCoords)
+    coords.append(startCoords)
 
-    #loop until stack is empty = no more options to move left
-    while stack is not []:
+    #loop until coords is empty = no more options to move left
+    while coords is not []:
+
+        tile = coords.pop()
+
+        if tile not in visited:
+            visited.append(tile)
+
+        if path:
+            curdir = path.pop()
+        else:
+            curdir = "null"
+
+        print "Current tile: ", tile
         #gives a list of tuples for tiles(x,y) we can move to next
-        curOptions = problem.getSuccessors(stack.pop())[0]
-        #put all on stack
-
-        for x in curOptions:
+        fringeTiles = problem.getSuccessors(tile)
+        #fringeCoords = [seq[0] for seq in problem.getSuccessors(tile)]
+        #fringepath = [seq[1] for seq in problem.getSuccessors(tile)]
+        #put all on coords
+        for x in fringeTiles:
             #but only if we haven't visited it
-            if x not in visited:
-                stack.append(x)
+            if x[0] not in visited:
+                #we need to check these coords AND keep track of path
+                coords.append(x[0])
+                path.append(x[1])
+                print "coords on stack: ", coords
+                print "current direction list: ", path
+                #because we just want the first node
+                break
 
-        #if we actually got something from that
-        if curOptions is not []:
-            #look at coordinates of this
-            curTile = stack.pop()
-            #keep track of visited
-            visited.append(curTile)
-            #add it to path
-            path.append(curTile)
-
-            #check if goal
-            if problem.isGoalState(curTile):
-                return path
-
-
-
-
-
-    util.raiseNotDefined()
-
+        if problem.isGoalState(tile):
+            path.append(curdir)
+            print "final path:", path
+            return path
+    '''
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 81]"
     "*** YOUR CODE HERE ***"
