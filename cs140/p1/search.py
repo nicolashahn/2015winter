@@ -86,44 +86,55 @@ def depthFirstSearch(problem):
     # let's start over
 
     stack = []          # holds coordinates we need to finish
-    stack.append(problem.getStartState())
     visited = []        # holds coordinates of everywhere we've been
-    # visited.append(problem.getStartState())
     path = []           # holds directions to get to coordinates (1 less than stack)
     # path.append("null")
 
+    # start at the start
+    stack.append(problem.getStartState())
+
     while stack:
         tile = stack.pop()
+
         if path:
-            dir = path.pop()
+            action = path.pop()
         else:
-            dir = "null"
+            action = "null"
 
-        visited.append(tile)
+        if tile not in visited:
+            visited.append(tile)
+            print "popping ", tile
 
-        validSuccessors = []
+            validSuccessors = []
 
-        for x in problem.getSuccessors(tile):
-            if x[0] not in visited:
-                validSuccessors.append(x)
-
-        #put current tile back on if we have successors
-        if validSuccessors:
-            stack.append(tile)
-            if dir is not "null":
-                path.append(dir)
-
-        for x in validSuccessors:
-            if problem.isGoalState(x[0]):
-                stack.append(x[0])
-                print visited
-                print stack
-                print path.append(x[1])
-                return path
-            else:
+            for x in problem.getSuccessors(tile):
                 if x[0] not in visited:
+                    validSuccessors.append(x)
+
+            print "valid successors of ", tile, " are ", validSuccessors
+
+            for x in validSuccessors:
+
+                if problem.isGoalState(x[0]):
                     stack.append(x[0])
                     path.append(x[1])
+                    print "visited:", visited
+                    print "stack:", stack
+                    print path
+                    return path
+
+                elif x[0] not in visited:
+
+                    stack.append(x[0])
+                    path.append(x[1])
+
+            # put tile back on stack if we had successors
+            if validSuccessors:
+                stack.append(tile)
+                if action is not "null":
+                    path.append(action)
+
+            print stack
 
 
 
