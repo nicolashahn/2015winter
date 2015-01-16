@@ -92,13 +92,12 @@ def depthFirstSearch(problem):
 
   #add coordinates of start state to list of visited states
   visited = []
+  #[0] gives the coordinates, [1] is the direction, [2] is _____
   visited.append(problem.getStartState()[0])
 
-  def dfsUtil(visited, )
-  for x in problem.getSuccessors(problem.getStartState()):
-      print x[1]
-
-
+  #loop until stack is empty
+  while visited.length() is not 0:
+    visited.push(problem.getSuccessors(visited.pop()))
 
   util.raiseNotDefined()
 

@@ -27,12 +27,12 @@ bibliography_rec (x:xs) = citeBook x ++ "\n" ++ bibliography_rec (xs)
 
 
 --foldl takes 3 arguments:
-	--what to do with the current element
-	--starting element
-	--list to deal with
+    --what to do with the current element
+    --starting element
+    --list to deal with
 --inner function in foldl takes 2:
-	--the accumulator (result of all previous foldl's)
-	--the current element
+    --the accumulator (result of all previous foldl's)
+    --the current element
 bibliography_fold :: [(String, String, Int)] -> String
 bibliography_fold [] = ""
 bibliography_fold xs = foldl(\acc x -> acc ++ citeBook x ++ "\n") "" xs
@@ -61,7 +61,9 @@ txt = "[1] and [2] both feature characters who will do whatever it takes to " ++
 
 --helper for references to check if a string is the right format
 checkIfRef :: String -> Bool
-checkIfRef x = ((head x) == '[' ) && ((last x) == ']') && (elem (digitToInt (x !! 1)) [1..9])
+checkIfRef x = ((head x) == '[' ) &&
+               ((last x) == ']') && 
+               (elem (digitToInt (x !! 1)) [1..9])
 
 references :: String -> Int
 references t = length (filter (checkIfRef) (words t))
@@ -73,13 +75,15 @@ getRefN :: String -> Int
 getRefN s = (digitToInt (s !! 1)) - 1
 
 --helper for citeText to convert the [n] strings to citations
-	--given both list of citations and list of words
-	--checks if word is a ref
-	--gets the int of the ref, picks that element from citebook, recursively puts it on the list
-	--if not a ref, put it back on the list and replaceRef the rest of the list
+    --given both list of citations and list of words
+    --checks if word is a ref
+    --gets the int of the ref, picks that element from citebook, recursively puts it on the list
+    --if not a ref, put it back on the list and replaceRef the rest of the list
 replaceRef :: [(String, String, Int)] -> [String] -> [String]
 replaceRef c [] = []
-replaceRef c (s:slist) = if checkIfRef s then ((citeBook (c !! getRefN s)) : (replaceRef c slist)) else s: (replaceRef c slist)
+replaceRef c (s:slist) = if checkIfRef s 
+                         then ((citeBook (c !! getRefN s)) : (replaceRef c slist)) 
+                         else s: (replaceRef c slist)
 
 --replace "[n]" with "Title (Auth, Year)" in a block of text
 --where n is the index in the list of tuples
