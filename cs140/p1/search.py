@@ -83,6 +83,55 @@ def depthFirstSearch(problem):
     """
     "*** YOUR CODE HERE ***"
 
+
+    stack = []
+    start = []
+    start = problem.getSuccessors(problem.getStartState())[0]
+    stack.append(start)
+    #holds coordinates ONLY
+    visited = []
+    visited.append(problem.getStartState())
+
+
+    while stack:
+        tile = stack.pop()
+        visited.append(tile[0])
+        validSuccessors = []
+
+        print visited
+
+        for x in problem.getSuccessors(tile[0]):
+            if x[0] not in visited:
+                validSuccessors.append(x)
+
+        print "valid successors are ", validSuccessors
+
+        if validSuccessors:
+            stack.append(tile)
+
+            firstSuccessor = validSuccessors[0]
+            print "firstSuccessor: ", firstSuccessor
+
+            if problem.isGoalState(firstSuccessor[0]):
+                stack.append(firstSuccessor)
+                return [s[1] for s in stack]
+            else:
+                stack.append(firstSuccessor)
+
+
+    #  awwwww YISSSSSSSSSSSSSSSSSSSS
+
+
+
+
+
+
+
+
+
+
+
+    '''
     # let's start over
 
     stack = []          # holds coordinates we need to finish
@@ -113,6 +162,12 @@ def depthFirstSearch(problem):
 
             print "valid successors of ", tile, " are ", validSuccessors
 
+            # put tile back on stack if we had successors
+            if validSuccessors:
+                stack.append(tile)
+                if action is not "null":
+                    path.append(action)
+
             for x in validSuccessors:
 
                 if problem.isGoalState(x[0]):
@@ -128,15 +183,10 @@ def depthFirstSearch(problem):
                     stack.append(x[0])
                     path.append(x[1])
 
-            # put tile back on stack if we had successors
-            if validSuccessors:
-                stack.append(tile)
-                if action is not "null":
-                    path.append(action)
+            print "stack is ", stack
+            print "path is ", path
 
-            print stack
-
-
+        '''
 
 
 
