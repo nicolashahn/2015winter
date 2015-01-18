@@ -85,7 +85,7 @@ def depthFirstSearch(problem):
 
 
     stack = []
-    start = []
+    # just get the first move
     start = problem.getSuccessors(problem.getStartState())[0]
     stack.append(start)
     #holds coordinates ONLY
@@ -98,19 +98,24 @@ def depthFirstSearch(problem):
         visited.append(tile[0])
         validSuccessors = []
 
-        print visited
+        # print visited
 
         for x in problem.getSuccessors(tile[0]):
             if x[0] not in visited:
                 validSuccessors.append(x)
 
-        print "valid successors are ", validSuccessors
+        # print "valid successors are ", validSuccessors
+
+        ##########################
+        # makes it run faster on tiny,medium,bigMazes
+        ##########################
+        validSuccessors.reverse()
 
         if validSuccessors:
             stack.append(tile)
 
             firstSuccessor = validSuccessors[0]
-            print "firstSuccessor: ", firstSuccessor
+            # print "firstSuccessor: ", firstSuccessor
 
             if problem.isGoalState(firstSuccessor[0]):
                 stack.append(firstSuccessor)
@@ -122,150 +127,101 @@ def depthFirstSearch(problem):
     #  awwwww YISSSSSSSSSSSSSSSSSSSS
 
 
-
-
-
-
-
-
-
-
-
-    '''
-    # let's start over
-
-    stack = []          # holds coordinates we need to finish
-    visited = []        # holds coordinates of everywhere we've been
-    path = []           # holds directions to get to coordinates (1 less than stack)
-    # path.append("null")
-
-    # start at the start
-    stack.append(problem.getStartState())
-
-    while stack:
-        tile = stack.pop()
-
-        if path:
-            action = path.pop()
-        else:
-            action = "null"
-
-        if tile not in visited:
-            visited.append(tile)
-            print "popping ", tile
-
-            validSuccessors = []
-
-            for x in problem.getSuccessors(tile):
-                if x[0] not in visited:
-                    validSuccessors.append(x)
-
-            print "valid successors of ", tile, " are ", validSuccessors
-
-            # put tile back on stack if we had successors
-            if validSuccessors:
-                stack.append(tile)
-                if action is not "null":
-                    path.append(action)
-
-            for x in validSuccessors:
-
-                if problem.isGoalState(x[0]):
-                    stack.append(x[0])
-                    path.append(x[1])
-                    print "visited:", visited
-                    print "stack:", stack
-                    print path
-                    return path
-
-                elif x[0] not in visited:
-
-                    stack.append(x[0])
-                    path.append(x[1])
-
-            print "stack is ", stack
-            print "path is ", path
-
-        '''
-
-
-
-
-
-
-
-        # if tile not in visited:
-        #     visited.append(tile)
-        #     stack.extend([s[0] for s in problem.getSuccessors(tile)])
-        #     path.extend([s[1] for s in problem.getSuccessors(tile)])
-        #     #print stack
-        #     #print path
-        #
-        # if problem.isGoalState(tile):
-        #     path.append(curdir)
-        #     stack.append(tile)
-        #     #print stack
-        #     #print path
-        #     return path
-
-
-
-    '''
-    #add coordinates of start state to list of visited states
-    #and coords for checking successors - ones we still have to check
-    #path (directions) to keep track of list of actions
-    visited = []
-    coords = []
-    path = []
-
-    #[0] gives the coordinates, [1] is the direction, [2] is cost of action
-    #self python note: append is pushing, top of list at back
-    startCoords = problem.getStartState()
-    visited.append(startCoords)
-    coords.append(startCoords)
-
-    #loop until coords is empty = no more options to move left
-    while coords is not []:
-
-        tile = coords.pop()
-
-        if tile not in visited:
-            visited.append(tile)
-
-        if path:
-            curdir = path.pop()
-        else:
-            curdir = "null"
-
-        print "Current tile: ", tile
-        #gives a list of tuples for tiles(x,y) we can move to next
-        fringeTiles = problem.getSuccessors(tile)
-        #fringeCoords = [seq[0] for seq in problem.getSuccessors(tile)]
-        #fringepath = [seq[1] for seq in problem.getSuccessors(tile)]
-        #put all on coords
-        for x in fringeTiles:
-            #but only if we haven't visited it
-            if x[0] not in visited:
-                #we need to check these coords AND keep track of path
-                coords.append(x[0])
-                path.append(x[1])
-                print "coords on stack: ", coords
-                print "current direction list: ", path
-                #because we just want the first node
-                break
-
-        if problem.isGoalState(tile):
-            path.append(curdir)
-            print "final path:", path
-            return path
-    '''
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 81]"
     "*** YOUR CODE HERE ***"
 
+    visited = []
+    visited.append(problem.getStartState())
 
 
-    util.raiseNotDefined()
+    # list of 2-tuples
+    #   first element is 3 tuple of current step:
+    #       ((x,y),(direction),(cost))
+    #   second element is list of actions taken to get here:
+    #       [(direction)]
+    queue = []
+
+    # have a tuple that has (step just taken to get here, all steps taken to get there)
+    for x in problem.getSuccessors(problem.getStartState()):
+        pathList = []
+        pathList.append(x[1])
+        queue.append((x,pathList))
+
+    while queue:
+        tile = queue.pop()
+        #first element of first tuple's first element -> (x,y)
+        coords = tile[0][0]
+        visited.append(coords)
+
+        #has just ((x,y),(direction),(1))
+        successors = []
+
+        for x in problem.getSuccessors(coords):
+            if x[0] not in visited:
+                successors.append(x)
+
+        for x in successors:
+            #to make sure we don't add more than one action
+            newTile = tile
+            #put add the new action to the list of actions
+            newTile[1].append(x[1])
+            #print newTile
+            if problem.isGoalState(x[0]):
+                print newTile[1]
+                return newTile[1]
+            else:
+                queue.insert(0,(x,newTile[1]))
+                visited.append(x[0])
+
+
+
+
+
+"""
+    queue = problem.getSuccessors(problem.getStartState())
+
+    # holds coordinates ONLY - doesn't matter if we treat as queue or stack
+    visited = []
+    visited.append(problem.getStartState())
+    parTile = problem.getStartState()
+
+
+
+    while queue:
+        tile = queue.pop()
+        pathSoFar = []
+
+        #get second item in overall tuple which should be list up until this point
+        prevPath = tile.[1]
+        pathSoFar.append(prevPath)
+
+        visited.append(tile[0])
+        validSuccessors = []
+
+
+        # print visited
+
+        for x in problem.getSuccessors(tile[0]):
+            if x[0] not in visited:
+
+                validSuccessors.append(x)
+
+        print "valid successors are ", validSuccessors
+
+        ##########################
+        # makes it run faster on tiny,medium,bigMazes
+        ##########################
+        #validSuccessors.reverse()
+
+        for x in validSuccessors:
+            queue.insert(0,x)
+
+            if problem.isGoalState(x[0]):
+                print queue
+                return [s[1] for s in queue]
+
+"""
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
