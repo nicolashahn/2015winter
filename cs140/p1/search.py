@@ -188,7 +188,71 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
-    "*** YOUR CODE HERE ***"
+
+    #just coordinates (x,y)
+    visited = []
+    visited.append(problem.getStartState())
+
+    # parent[child coordinates] = parent coordinates
+    parent = {}
+    # action[coordinates] = direction we came from to get here
+    action = {}
+    # cost[coordinates] = cost of visiting this tile
+    cost = {}
+
+    parent[problem.getStartState] = "nil"
+
+    queue = util.PriorityQueue()
+    # load the first successors
+    for x in problem.getSuccessors(problem.getStartState()):
+        parent[x[0]] = problem.getStartState()
+        action[x[0]] = x[1]
+        cost[x[0]] = x[2]
+        queue.push(x[0],x[2])
+
+
+    while not queue.isEmpty():
+        #tile just has coordinates
+        tile = queue.pop()
+        visited.append(tile)
+
+        # print tile
+
+        successors = []
+        for x in problem.getSuccessors(tile):
+            if x[0] not in visited:
+                successors.append(x)
+                visited.append(x[0])
+
+        #for each child node of this node
+        for x in successors:
+            # keep track of the action taken to get here
+            action[x[0]] = x[1]
+            # and its parent
+            parent[x[0]] = tile
+            # and the tile cost + cost of parents
+            cost[x[0]] = x[2] + cost[tile]
+            if not problem.isGoalState(x[0]):
+                # coordinates and cost
+                queue.push(x[0],x[2] + cost[tile])
+
+            # if we reached the goal state
+            else:
+                # create a path list and put last move on it
+                path = []
+                path.append(x[1])
+                # pathPar = used to iterate through parents back to start state
+                pathPar = tile
+                # until we get there
+                while pathPar is not problem.getStartState():
+                    # put the action of the move to get from the parent to the child on the list
+                    path.append(action[pathPar])
+                    # go to next parent up the tree
+                    pathPar = parent[pathPar]
+                # because we got the actions in reverse order
+                path.reverse()
+                return path
+
 
 
 
@@ -203,8 +267,76 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     "Search the node that has the lowest combined cost and heuristic first."
-    "*** YOUR CODE HERE ***"
 
+    #just coordinates (x,y)
+    visited = []
+    visited.append(problem.getStartState())
+
+    # parent[child coordinates] = parent coordinates
+    parent = {}
+    # action[coordinates] = direction we came from to get here
+    action = {}
+    # cost[coordinates] = cost of visiting this tile
+    cost = {}
+
+    parent[problem.getStartState] = "nil"
+
+    queue = util.PriorityQueue()
+    # load the first successors
+    for x in problem.getSuccessors(problem.getStartState()):
+        parent[x[0]] = problem.getStartState()
+        action[x[0]] = x[1]
+        cost[x[0]] = x[2]
+        queue.push(x[0],cost[x[0]])
+
+
+    while not queue.isEmpty():
+        #tile just has coordinates
+        tile = queue.pop()
+        visited.append(tile)
+
+        # take heuristic cost off before we calculate cost of successors
+        # we want to add up the accumulated path costs, but not the heuristic costs
+        # but while it's in the queue, we want both the total path cost and tile heuristic cost
+        cost[tile] = cost[tile] - heuristic(tile,problem)
+
+        # print tile
+
+        successors = []
+        for x in problem.getSuccessors(tile):
+            if x[0] not in visited:
+                successors.append(x)
+                visited.append(x[0])
+
+        #for each child node of this node
+        for x in successors:
+            # keep track of the action taken to get here
+            action[x[0]] = x[1]
+            # and its parent
+            parent[x[0]] = tile
+            # and tile cost + path so far cost + heuristic cost
+            cost[x[0]] = x[2] + cost[tile] + heuristic(x[0], problem)
+            # print x[0], heuristic(x[0], problem), cost[x[0]], x[2]
+            if not problem.isGoalState(x[0]):
+                # coordinates and cost
+                queue.push(x[0], cost[x[0]])
+
+            # if we reached the goal state
+            else:
+                # create a path list and put last move on it
+                path = []
+                path.append(x[1])
+                # pathPar = used to iterate through parents back to start state
+                pathPar = tile
+                # until we get there
+                while pathPar is not problem.getStartState():
+                    # put the action of the move to get from the parent to the child on the list
+                    path.append(action[pathPar])
+                    # go to next parent up the tree
+                    pathPar = parent[pathPar]
+                # because we got the actions in reverse order
+                path.reverse()
+                return path
 
 
     util.raiseNotDefined()

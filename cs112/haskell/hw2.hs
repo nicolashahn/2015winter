@@ -18,9 +18,9 @@ myFoldr f z []      = z
 myFoldr f z (x:xs)  = f x (myFoldr f z xs)
 
 
---myFoldl2 :: (a -> b -> a) -> a -> [b] -> a
---myFoldl2 f z []     = z
---myFoldl2 f z (x:xs) = f (foldr f z xs) x
+myFoldl2 :: (a -> b -> a) -> a -> [b] -> a
+myFoldl2 f z xs = foldr step id xs z
+    where step x g a = g (f a x)
 
 
 isUpper :: Char -> Bool
@@ -50,6 +50,16 @@ digitSum :: Int -> Int
 digitSum 0 = 0
 digitSum x = if (div x 10) == 0 then mod x 10 else digitSum (div x 10) + mod x 10
 
+
+--helper for sayNum
+--x: takes the integer, 
+--m: a multiple of 1000 that is 1/1000th the "illion", 
+--s: the "illion" string of that, 
+--and returns the whole number in string form
+illion :: Integer -> Integer -> String -> String
+illion x m s = sayNum (div x m) ++ s ++ if ((mod x m) /= 0)
+                                        then sayNum (mod x m)
+                                        else ""
 
 sayNum :: Integer -> String
 sayNum 0 = "zero "
@@ -95,6 +105,45 @@ sayNum x
         sayNum (div x 1000000) ++ "million " ++ if ((mod x 1000000) /= 0) 
                                                 then sayNum (mod x 1000000) 
                                                 else ""
-    | x >= 1000000000 = "not yet supported"
-
--- there has to be a smarter way to do this...
+-- there has to be a smarter way to do this
+    | x < 1000000000000 = 
+        illion x 1000000000 "billion "
+    | x < 1000000000000000 = 
+        illion x 1000000000000 "trillion "
+    | x < 1000000000000000000 = 
+        illion x 1000000000000000 "quadrillion "
+    | x < 1000000000000000000000 = 
+        illion x 1000000000000000000 "quintillion "
+    | x < 1000000000000000000000000 = 
+        illion x 1000000000000000000000 "sextillion "
+    | x < 1000000000000000000000000000 = 
+        illion x 1000000000000000000000000 "septillion "
+    | x < 1000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000 "octillion "
+    | x < 1000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000 "nonillion "
+    | x < 1000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000 "decillion "
+    | x < 1000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000 "undecillion "
+    | x < 1000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000 "duodecillion "
+    | x < 1000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000 "tredecillion "
+    | x < 1000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000 "quattuordecillion "
+    | x < 1000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000 "quindecillion "
+    | x < 1000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000 "sexdecillion "
+    | x < 1000000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000000 "septendecillion "
+    | x < 1000000000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000000000 "octodecillion "
+    | x < 1000000000000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000000000000 "novemdecillion "
+    | x < 1000000000000000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000000000000000 "vigintillion "
+    | x < 1000000000000000000000000000000000000000000000000000000000000000000000 = 
+        illion x 1000000000000000000000000000000000000000000000000000000000000000000 "centillion "
+    | x >= 1000000000000000000000000000000000000000000000000000000000000000000000 = "nah"
