@@ -81,7 +81,6 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     """
-    "*** YOUR CODE HERE ***"
 
 
     stack = []
@@ -129,99 +128,63 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 81]"
-    "*** YOUR CODE HERE ***"
 
+    #just coordinates (x,y)
     visited = []
     visited.append(problem.getStartState())
 
+    queue = problem.getSuccessors(problem.getStartState())
 
-    # list of 2-tuples
-    #   first element is 3 tuple of current step:
-    #       ((x,y),(direction),(cost))
-    #   second element is list of actions taken to get here:
-    #       [(direction)]
-    queue = []
+    # parent[child coordinates] = parent coordinates
+    parent = {}
+    # action[coordinates] = direction we came from to get here
+    action = {}
 
-    # have a tuple that has (step just taken to get here, all steps taken to get there)
-    for x in problem.getSuccessors(problem.getStartState()):
-        pathList = []
-        pathList.append(x[1])
-        queue.append((x,pathList))
+    parent[problem.getStartState] = "nil"
+
+    # load the first successors
+    for x in queue:
+        parent[x[0]] = problem.getStartState()
+        action[x[0]] = x[1]
+
 
     while queue:
         tile = queue.pop()
-        #first element of first tuple's first element -> (x,y)
-        coords = tile[0][0]
+        coords = tile[0]
         visited.append(coords)
 
-        #has just ((x,y),(direction),(1))
         successors = []
-
         for x in problem.getSuccessors(coords):
             if x[0] not in visited:
                 successors.append(x)
-
-        for x in successors:
-            #to make sure we don't add more than one action
-            newTile = tile
-            #put add the new action to the list of actions
-            newTile[1].append(x[1])
-            #print newTile
-            if problem.isGoalState(x[0]):
-                print newTile[1]
-                return newTile[1]
-            else:
-                queue.insert(0,(x,newTile[1]))
                 visited.append(x[0])
 
-
-
-
-
-"""
-    queue = problem.getSuccessors(problem.getStartState())
-
-    # holds coordinates ONLY - doesn't matter if we treat as queue or stack
-    visited = []
-    visited.append(problem.getStartState())
-    parTile = problem.getStartState()
-
-
-
-    while queue:
-        tile = queue.pop()
-        pathSoFar = []
-
-        #get second item in overall tuple which should be list up until this point
-        prevPath = tile.[1]
-        pathSoFar.append(prevPath)
-
-        visited.append(tile[0])
-        validSuccessors = []
-
-
-        # print visited
-
-        for x in problem.getSuccessors(tile[0]):
-            if x[0] not in visited:
-
-                validSuccessors.append(x)
-
-        print "valid successors are ", validSuccessors
-
-        ##########################
-        # makes it run faster on tiny,medium,bigMazes
-        ##########################
-        #validSuccessors.reverse()
-
-        for x in validSuccessors:
-            queue.insert(0,x)
-
+        #for each child node of this node
+        for x in successors:
+            # keep track of the action taken to get here
+            action[x[0]] = x[1]
+            # and its parent
+            parent[x[0]] = coords
+            # if we reached the goal state
             if problem.isGoalState(x[0]):
-                print queue
-                return [s[1] for s in queue]
+                # create a path list and put last move on it
+                path = []
+                path.append(x[1])
+                # pathPar = used to iterate through parents back to start state
+                pathPar = coords
+                # until we get there
+                while pathPar is not problem.getStartState():
+                    # put the action of the move to get from the parent to the child on the list
+                    path.append(action[pathPar])
+                    # go to next parent up the tree
+                    pathPar = parent[pathPar]
+                # because we got the actions in reverse order
+                path.reverse()
+                return path
+            else:
+                queue.insert(0,x)
 
-"""
+
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
