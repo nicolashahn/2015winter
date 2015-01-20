@@ -147,9 +147,9 @@ def breadthFirstSearch(problem):
         parent[x[0]] = problem.getStartState()
         action[x[0]] = x[1]
 
-
     while queue:
         tile = queue.pop()
+        # print tile
         coords = tile[0]
         visited.append(coords)
 
@@ -163,6 +163,7 @@ def breadthFirstSearch(problem):
         for x in successors:
             # keep track of the action taken to get here
             action[x[0]] = x[1]
+
             # and its parent
             parent[x[0]] = coords
             # if we reached the goal state
@@ -173,7 +174,7 @@ def breadthFirstSearch(problem):
                 # pathPar = used to iterate through parents back to start state
                 pathPar = coords
                 # until we get there
-                while pathPar is not problem.getStartState():
+                while pathPar != problem.getStartState():
                     # put the action of the move to get from the parent to the child on the list
                     path.append(action[pathPar])
                     # go to next parent up the tree
@@ -329,7 +330,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 # pathPar = used to iterate through parents back to start state
                 pathPar = tile
                 # until we get there
-                while pathPar is not problem.getStartState():
+                while pathPar != problem.getStartState():
                     # put the action of the move to get from the parent to the child on the list
                     path.append(action[pathPar])
                     # go to next parent up the tree
@@ -337,9 +338,6 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 # because we got the actions in reverse order
                 path.reverse()
                 return path
-
-
-    util.raiseNotDefined()
 
 
 # Abbreviations
