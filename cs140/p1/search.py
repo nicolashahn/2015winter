@@ -90,10 +90,11 @@ def depthFirstSearch(problem):
     #holds coordinates ONLY
     visited = []
     visited.append(problem.getStartState())
+    visited.append(start)
 
 
     while stack:
-        tile = stack.pop()
+        tile = stack[len(stack)-1]
         visited.append(tile[0])
         validSuccessors = []
 
@@ -102,16 +103,38 @@ def depthFirstSearch(problem):
         for x in problem.getSuccessors(tile[0]):
             if x[0] not in visited:
                 validSuccessors.append(x)
+                # visited.append(x[0])
+        if validSuccessors:
+            # validSuccessors.reverse()
+            firstSuccessor = validSuccessors[0]
+            visited.append(firstSuccessor[0])
+            stack.append(firstSuccessor)
+            if problem.isGoalState(firstSuccessor[0]):
+                return [s[1] for s in stack]
+        else:
+            stack.pop()
+
+
+            #############################
+            # fix this so it gets correct # of nodes
+            #############################
+
+
+
+"""
+        for x in problem.getSuccessors(tile[0]):
+            if x[0] not in visited:
+                validSuccessors.append(x)
+                # visited.append(x[0])
 
         # print "valid successors are ", validSuccessors
 
         ##########################
         # makes it run faster on tiny,medium,bigMazes
         ##########################
-        validSuccessors.reverse()
+        # validSuccessors.reverse()
 
         if validSuccessors:
-            stack.append(tile)
 
             firstSuccessor = validSuccessors[0]
             # print "firstSuccessor: ", firstSuccessor
@@ -121,8 +144,10 @@ def depthFirstSearch(problem):
                 return [s[1] for s in stack]
             else:
                 stack.append(firstSuccessor)
+        else:
+            stack.pop()
 
-
+"""
     #  awwwww YISSSSSSSSSSSSSSSSSSSS
 
 
@@ -181,6 +206,7 @@ def breadthFirstSearch(problem):
                     pathPar = parent[pathPar]
                 # because we got the actions in reverse order
                 path.reverse()
+                # path.pop()
                 return path
             else:
                 queue.insert(0,x)

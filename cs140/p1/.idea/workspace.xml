@@ -4,7 +4,6 @@
     <list default="true" id="edaa13c9-b03f-49c2-be64-0648d1797a88" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/search.py" afterPath="$PROJECT_DIR$/search.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/searchAgents.py" afterPath="$PROJECT_DIR$/searchAgents.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="p1.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,8 +30,8 @@
       <file leaf-file-name="searchAgents.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/searchAgents.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.63169897" vertical-offset="6127" max-vertical-offset="10455">
-              <caret line="393" column="18" selection-start-line="392" selection-start-column="0" selection-end-line="393" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.5872292" vertical-offset="10365" max-vertical-offset="12580">
+              <caret line="640" column="60" selection-start-line="640" selection-start-column="60" selection-end-line="640" selection-end-column="60" />
               <folding>
                 <element signature="e#1125#1152#0" expanded="true" />
               </folding>
@@ -63,8 +62,8 @@
       <file leaf-file-name="search.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/search.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.37931" vertical-offset="5005" max-vertical-offset="5984">
-              <caret line="307" column="35" selection-start-line="307" selection-start-column="35" selection-end-line="307" selection-end-column="35" />
+            <state vertical-scroll-proportion="-25.310345" vertical-offset="1238" max-vertical-offset="6426">
+              <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -371,7 +370,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32943678" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32943678" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41577825" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40458423" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.015991472" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -481,14 +480,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pacman.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1963" max-vertical-offset="11322">
-          <caret line="204" column="12" selection-start-line="204" selection-start-column="4" selection-end-line="204" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/game.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3557" max-vertical-offset="12053">
@@ -505,18 +496,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pacman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1963" max-vertical-offset="11322">
+          <caret line="204" column="12" selection-start-line="204" selection-start-column="4" selection-end-line="204" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.37931" vertical-offset="5005" max-vertical-offset="5984">
-          <caret line="307" column="35" selection-start-line="307" selection-start-column="35" selection-end-line="307" selection-end-column="35" />
+        <state vertical-scroll-proportion="-25.310345" vertical-offset="1238" max-vertical-offset="6426">
+          <caret line="116" column="0" selection-start-line="116" selection-start-column="0" selection-end-line="116" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/searchAgents.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63169897" vertical-offset="6127" max-vertical-offset="10455">
-          <caret line="393" column="18" selection-start-line="392" selection-start-column="0" selection-end-line="393" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.5872292" vertical-offset="10365" max-vertical-offset="12580">
+          <caret line="640" column="60" selection-start-line="640" selection-start-column="60" selection-end-line="640" selection-end-column="60" />
           <folding>
             <element signature="e#1125#1152#0" expanded="true" />
           </folding>

@@ -300,7 +300,7 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
 
         # if the list of corners remaining is 0, we've reached all of them
-        if len(list(state[1])) is 0:
+        if (len(list(state[1])) is 1) and (state[0] in state[1]):
             return True
 
 
@@ -384,16 +384,22 @@ def cornersHeuristic(state, problem):
 
     "*** YOUR CODE HERE ***"
 
-    # will perform manhattan heuristic for all remaining corners, list them
+    # will perform Euclidean heuristic for all remaining corners, list them
     # returns the lowest one (closest corner)
 
     """
 
-    MANHATTAN HEURISTIC (for reference)
+    Manhattan heuristic
 
     xy1 = position
     xy2 = problem.goal
     return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+
+    Euclidean heuristic
+
+    xy1 = position
+    xy2 = problem.goal
+    return ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
 
     """
 
@@ -401,11 +407,19 @@ def cornersHeuristic(state, problem):
     curPos = state[0]
     hList = []
 
+    """
     for remainingCorner in list(state[1]):
         manhattan = abs(curPos[0] - remainingCorner[0]) + abs(curPos[1] - remainingCorner[1])
         print manhattan
         hList.append(manhattan)
+    """
+    for remainingCorner in list(state[1]):
+        euclidean = abs(curPos[0] - remainingCorner[0]) + abs(curPos[1] - remainingCorner[1])
+        # euclidean = (2**0.5)*euclidean
+        # print euclidean
+        hList.append(euclidean)
 
+    # print hList
     hList.sort()
     hList.reverse()
     if hList:
@@ -437,6 +451,8 @@ class FoodSearchProblem:
         self.startingGameState = startingGameState
         self._expanded = 0
         self.heuristicInfo = {} # A dictionary for the heuristic to store information
+
+        # print startingGameState.getFood().asList()
 
     def getStartState(self):
         return self.start
@@ -505,7 +521,107 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+
+    foodList = foodGrid.asList()
+
+    farthestDist = 0
+    farthestCoords = position
+
+    # find the farthest food's distance and coordinates
+    for food in foodList:
+        dist = abs(position[0] - food[0]) + abs(position[1] - food[1])
+        if farthestDist < dist:
+            farthestDist = dist
+            farthestCoords = food
+
+    # will be negative if the farthest food is to the right, pos if to left
+    # only keep track of x value
+    xdist = position[1] - farthestCoords[1]
+    foodCount = 0
+
+    # then count the food dots in between
+
+    if xdist>0: # if the farthest dot is to the left
+        for food in foodList:
+            # count the foods to the right
+            if (position[1] - food[1]) < 0:
+                foodCount+=1
+
+    if xdist<0:
+        for food in foodList:
+            if (position[1] - food[1]) > 0:
+                foodCount+=1
+
+    if xdist == 0: # if the farthest food is directly north or south of us
+        for food in foodList:
+            # count the foods that aren't directly north or south
+            if (position[1] - food[1]) != 0:
+                foodCount+=1
+
+    return foodCount + farthestDist
+
+
+
+    #######################
+
+    # fix this so it passes consistency test, gets under 9000 nodes
+
+    ######################
+
+
+    """
+
+    # on first heuristic call set targetFood to nil
+    # meaning we're not targeting any specific food pellet
+    if 'targetFood' not in problem.heuristicInfo:
+        problem.heuristicInfo['targetFood'] = 'nil'
+
+    # let's also keep track of the food we've already eaten
+    if 'foodEaten' not in problem.heuristicInfo:
+        problem.heuristicInfo['foodEaten'] = []
+
+    # if we just found the food pellet we were targeting
+    if position == problem.heuristicInfo['targetFood']:
+        # print "ate food:",position
+        # add to list of eaten food
+        if position not in problem.heuristicInfo['foodEaten']:
+            problem.heuristicInfo['foodEaten'].append(position)
+        problem.heuristicInfo['targetFood'] = 'nil'
+
+
+    if problem.heuristicInfo['targetFood'] == 'nil':
+
+        # print problem.heuristicInfo['foodEaten']
+
+        foodList = foodGrid.asList()
+        # will hold list of (coords of a food pellet, dist to that pellet)
+        hList = []
+
+        # make a list of their distances
+        for food in foodList:
+            euclidean = abs(position[0] - food[0]) + abs(position[1] - food[1])
+            hList.append((food,euclidean))
+
+        # get the closest one
+        hList.sort()
+        hList.reverse()
+        # keep popping off heuristic list until we get a food not yet eaten
+        while hList:
+            # set the target food to be the nearest one
+            nearestFood = hList.pop()
+            # print nearestFood, problem.heuristicInfo['foodEaten']
+            if nearestFood not in problem.heuristicInfo['foodEaten']:
+                problem.heuristicInfo['targetFood'] = nearestFood[0]
+            # return dist to nearest food
+                # print nearestFood
+                return nearestFood[1]
+
+    else: # we already have a food pellet we're targeting
+        food = problem.heuristicInfo['targetFood']
+
+        euclidean = abs(position[0] - food[0]) + abs(position[1] - food[1])
+        return euclidean
+    """
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -533,7 +649,15 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
+        return search.uniformCostSearch(problem)
+
+        ###############################
+        # fix this so it gives correct closest food pellet
+        ###############################
+
+
+
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -568,8 +692,9 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x,y = state
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if (x,y) in self.food.asList():
+            return True
+
 
 ##################
 # Mini-contest 1 #
