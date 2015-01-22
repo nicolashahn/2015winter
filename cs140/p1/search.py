@@ -80,8 +80,24 @@ def depthFirstSearch(problem):
     print "Start:", problem.getStartState()
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
-    """
 
+
+    """
+    """
+    queue = util.Stack()
+    queue.push( (problem.getStartState(), [], []) )
+    while not queue.isEmpty():
+        node, actions, visited = queue.pop()
+
+        for coord, direction, steps in problem.getSuccessors(node):
+            if not coord in visited:
+                if problem.isGoalState(coord):
+                    return actions + [direction]
+                queue.push((coord, actions + [direction], visited + [node] ))
+
+    return []
+
+    """
 
     stack = []
     # just get the first move
@@ -90,7 +106,7 @@ def depthFirstSearch(problem):
     #holds coordinates ONLY
     visited = []
     visited.append(problem.getStartState())
-    visited.append(start)
+    # visited.append(start)
 
 
     while stack:
@@ -100,10 +116,12 @@ def depthFirstSearch(problem):
 
         # print visited
 
-        for x in problem.getSuccessors(tile[0]):
+        successors = problem.getSuccessors(tile[0])
+
+        for x in successors:
             if x[0] not in visited:
                 validSuccessors.append(x)
-                # visited.append(x[0])
+            # visited.append(x[0])
         if validSuccessors:
             # validSuccessors.reverse()
             firstSuccessor = validSuccessors[0]
@@ -121,39 +139,40 @@ def depthFirstSearch(problem):
 
 
 
-"""
-        for x in problem.getSuccessors(tile[0]):
-            if x[0] not in visited:
-                validSuccessors.append(x)
-                # visited.append(x[0])
-
-        # print "valid successors are ", validSuccessors
-
-        ##########################
-        # makes it run faster on tiny,medium,bigMazes
-        ##########################
-        # validSuccessors.reverse()
-
-        if validSuccessors:
-
-            firstSuccessor = validSuccessors[0]
-            # print "firstSuccessor: ", firstSuccessor
-
-            if problem.isGoalState(firstSuccessor[0]):
-                stack.append(firstSuccessor)
-                return [s[1] for s in stack]
-            else:
-                stack.append(firstSuccessor)
-        else:
-            stack.pop()
-
-"""
-    #  awwwww YISSSSSSSSSSSSSSSSSSSS
-
-
 def breadthFirstSearch(problem):
     "Search the shallowest nodes in the search tree first. [p 81]"
 
+
+    # follow fixed version of UCS as template
+
+    queue = []
+    queue.append((problem.getStartState(), []))
+    visited = []
+
+    while queue:
+        tile = queue.pop()
+
+        coords = tile[0]
+        actions = tile[1]
+
+        for x in problem.getSuccessors(coords):
+            pos = x[0]
+            dir = x[1]
+
+            if pos not in visited:
+                # check if successors are goal, not popped tile
+                if problem.isGoalState(pos):
+                    return actions + [dir]
+                new_actions = actions + [dir]
+                queue.insert(0,(pos, new_actions))
+                # this time we add fringe to visited, not popped tiles
+                visited.append(pos)
+    return []
+
+
+    # below is pretty bad but not as broken as UCS was
+
+"""
     #just coordinates (x,y)
     visited = []
     visited.append(problem.getStartState())
@@ -173,6 +192,7 @@ def breadthFirstSearch(problem):
         action[x[0]] = x[1]
 
     while queue:
+        foundPath = False
         tile = queue.pop()
         # print tile
         coords = tile[0]
@@ -193,6 +213,7 @@ def breadthFirstSearch(problem):
             parent[x[0]] = coords
             # if we reached the goal state
             if problem.isGoalState(x[0]):
+                foundPath = True
                 # create a path list and put last move on it
                 path = []
                 path.append(x[1])
@@ -201,21 +222,69 @@ def breadthFirstSearch(problem):
                 # until we get there
                 while pathPar != problem.getStartState():
                     # put the action of the move to get from the parent to the child on the list
-                    path.append(action[pathPar])
+                    path.insert(0,action[pathPar])
                     # go to next parent up the tree
                     pathPar = parent[pathPar]
-                # because we got the actions in reverse order
-                path.reverse()
                 # path.pop()
-                return path
+
             else:
                 queue.insert(0,x)
+        if foundPath == True:
+            return path
 
-
+"""
 
 def uniformCostSearch(problem):
     "Search the node of least total cost first. "
 
+
+    ##################
+    #rewrite checking goal state right after queue pop, instead of after getSuccessor()
+    #########################
+
+
+    # queue will hold the list of ((coordinates,[actions])
+    queue = util.PriorityQueue()
+    queue.push( (problem.getStartState(), []), 0)
+    # visited is list of coordinates
+    visited = []
+
+    while not queue.isEmpty():
+        tile = queue.pop()
+
+        coords = tile[0]
+        actions = tile[1]
+
+        # print node, actions
+
+        if problem.isGoalState(coords):
+            # if we're already on the tile
+            # the actions are what we want
+            return actions
+
+        visited.append(coords)
+
+        # NOW check successors
+        for x in problem.getSuccessors(coords):
+
+            pos = x[0]
+            dir = x[1]
+            # no x[2], cost is trivial, 1
+
+            if pos not in visited:
+
+                new_actions = actions + [dir]
+
+                # getCostOfActions = calculate list of action's cost
+                queue.push((pos, new_actions), problem.getCostOfActions(new_actions))
+
+    # if goal state never reached
+    return []
+
+
+    # below this is crap, rewrite
+
+"""
     #just coordinates (x,y)
     visited = []
     visited.append(problem.getStartState())
@@ -239,6 +308,7 @@ def uniformCostSearch(problem):
 
 
     while not queue.isEmpty():
+        foundPath = False
         #tile just has coordinates
         tile = queue.pop()
         visited.append(tile)
@@ -265,6 +335,7 @@ def uniformCostSearch(problem):
 
             # if we reached the goal state
             else:
+                foundPath = True
                 # create a path list and put last move on it
                 path = []
                 path.append(x[1])
@@ -273,17 +344,19 @@ def uniformCostSearch(problem):
                 # until we get there
                 while pathPar is not problem.getStartState():
                     # put the action of the move to get from the parent to the child on the list
-                    path.append(action[pathPar])
+                    path.insert(0,action[pathPar])
                     # go to next parent up the tree
                     pathPar = parent[pathPar]
-                # because we got the actions in reverse order
-                path.reverse()
-                return path
+
+                path.append(action[problem.getStartState()])
+
+        if foundPath == True:
+            return path
 
 
+"""
 
-
-    util.raiseNotDefined()
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -358,11 +431,10 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 # until we get there
                 while pathPar != problem.getStartState():
                     # put the action of the move to get from the parent to the child on the list
-                    path.append(action[pathPar])
+                    path.insert(0,action[pathPar])
                     # go to next parent up the tree
                     pathPar = parent[pathPar]
-                # because we got the actions in reverse order
-                path.reverse()
+
                 return path
 
 

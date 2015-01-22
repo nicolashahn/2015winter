@@ -522,6 +522,65 @@ def foodHeuristic(state, problem):
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
 
+    """
+
+    foodList = foodGrid.asList()
+
+    cDist = 999999
+    #just take the first one
+
+    if foodList == []:
+        return 0
+
+    cCoords = foodList[0]
+
+    sum = 0
+
+    # first find closest food
+    for food in foodList:
+        # get distance between pacman and this food dot
+        dist = ( (position[0] - food[0]) ** 2 + (position[1] - food[1]) ** 2 ) ** 0.5
+        #dist = abs(position[0] - food[0]) + abs(position[1] - food[1])
+        # if the current
+        if cDist > dist:
+            cDist = dist
+            cCoords = food
+
+    foodList.remove(cCoords)
+
+    oldCoords = cCoords
+
+    if foodList == []:
+        return cDist
+
+    # find the CLOSEST food's distance and coordinates
+    # then remove that food from the list
+    # and find the next closest food to that food, add that to sum of distances
+    # etc, return the sum once foodList is empty
+    while foodList:
+        cDist = 999999
+        #print cCoords
+        #print foodList
+        for food in foodList:
+            dist = ( (oldCoords[0] - food[0]) ** 2 + (oldCoords[1] - food[1]) ** 2 ) ** 0.5
+            #dist = abs(oldCoords[0] - food[0]) + abs(oldCoords[1] - food[1])
+            if cDist > dist:
+                cDist = dist
+                cCoords = food
+        sum += cDist
+        foodList.remove(cCoords)
+        oldCoords = cCoords
+
+
+    # print sum
+    return sum
+
+
+
+
+
+    """
+
     foodList = foodGrid.asList()
 
     farthestDist = 0
@@ -536,7 +595,7 @@ def foodHeuristic(state, problem):
 
     # will be negative if the farthest food is to the right, pos if to left
     # only keep track of x value
-    xdist = position[1] - farthestCoords[1]
+    xdist = position[0] - farthestCoords[0]
     foodCount = 0
 
     # then count the food dots in between
@@ -544,29 +603,31 @@ def foodHeuristic(state, problem):
     if xdist>0: # if the farthest dot is to the left
         for food in foodList:
             # count the foods to the right
-            if (position[1] - food[1]) < 0:
+            if (position[0] - food[0]) < 0:
                 foodCount+=1
 
     if xdist<0:
         for food in foodList:
-            if (position[1] - food[1]) > 0:
+            if (position[0] - food[0]) > 0:
                 foodCount+=1
 
     if xdist == 0: # if the farthest food is directly north or south of us
         for food in foodList:
             # count the foods that aren't directly north or south
-            if (position[1] - food[1]) != 0:
+            if (position[0] - food[0]) != 0:
                 foodCount+=1
 
-    return foodCount + farthestDist
+    return (foodCount + farthestDist)-3
 
 
 
     #######################
 
-    # fix this so it passes consistency test, gets under 9000 nodes
+    # fix this so it passes consistency test
 
     ######################
+
+
 
 
     """
@@ -649,6 +710,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+
 
         return search.uniformCostSearch(problem)
 
