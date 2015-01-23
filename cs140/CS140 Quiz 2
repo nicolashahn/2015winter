@@ -1,0 +1,94 @@
+CS140 Quiz 2
+
+1. The bus stop (B) must be adjacent to the road.
+2. The stage (A) must not be adjacent to any houses. 
+3. The ticket stand (C) must be adjacent to the bus stop (B).
+4. The stage (A) must not be on a hill.
+5. The ticket stand (C) must not be on a hill.
+6. The food/beverages stands (D) must be adjacent to the stage (A).
+7. All structures must be in different grid squares.
+
+
+----------------------------------------------------------------
+| C food stand    |  A stage        | D ticket stand    |
+----------------------------------------------------------------	road
+|                 |                 | B bus stop        |
+-----------------------------------------------------------------
+house
+
+
+after unary constraints:
+
+Domain(A) Stage: 				{(1,1), (1,2), (1,3), (2,2)} 	
+Domain(B) Bus stop: 			{(1,3), (2,3)}
+Domain(C) Ticket Stand: 		{(1,1), (1,2), (1,3), (2,1), (2,2)}
+Domain(D) Food/Beverages Stand: {(1,1), (1,2), (1,3), (2,1), (2,2), (2,3)}
+
+B gets 2,3 because it is less constraining than 1,3
+- constrains D to be either 1,3 or 2,2
+
+Domain(A) Stage: 				{(1,1), (1,2), (1,3), (2,2)} 	
+Domain(B) Bus stop: 			{(2,3)}
+Domain(C) Ticket Stand: 		{(1,1), (1,2), (1,3), (2,1), (2,2)}
+Domain(D) Food/Beverages Stand: {(1,1), (1,2), (1,3), (2,1), (2,2), (2,3)}
+
+Pick A next because it participates in 2 unary, 1 binary constraint
+
+A gets 1,1
+- constrains D to be 1,2 or 2,1
+
+Domain(A) Stage: 				{(1,1)}	
+Domain(B) Bus stop: 			{(2,3)}
+Domain(C) Ticket Stand: 		{(1,1), (1,2), (1,3), (2,1), (2,2)}
+Domain(D) Food/Beverages Stand: {(1,1), (1,2), (1,3), (2,1), (2,2), (2,3)}
+
+Pick C next because it has 1 unary, 1 binary constraint
+
+C gets 1,3 because that is the first coordinate in the list that meets all the constraints
+
+Domain(A) Stage: 				{(1,1)}	
+Domain(B) Bus stop: 			{(2,3)}
+Domain(C) Ticket Stand: 		{(1,3)}
+Domain(D) Food/Beverages Stand: {(1,1), (1,2), (1,3), (2,1), (2,2), (2,3)}
+
+D gets 1,2 because first coordinate that satisfies constraints
+
+Domain(A) Stage: 				(1,1)	
+Domain(B) Bus stop: 			(2,3)
+Domain(C) Ticket Stand: 		(1,3)
+Domain(D) Food/Beverages Stand: (1,2)
+
+
+/////////////////////
+// 	Question 6
+/////////////////////
+
+Time slots:  	1,2,3
+Bands:			A,B,C
+
+1. A, B, and C all need to take on different values
+2. A < C
+
+A cannot be 3 because then there would be nowhere for C to go s.t. A<C
+
+Question 7
+
+B can still be any value
+
+Question 8
+
+C cannot be 1 becuse then there would be nowhere for A to go s.t. A<C
+
+A,B,C all have 1 unary constraint
+A and C have 1 binary constraint, B has none
+
+A goes first because alphabetical
+
+A = 1
+
+C has one binary constraint, B has none
+
+C = 2
+
+B = 3
+
